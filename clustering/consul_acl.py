@@ -69,18 +69,6 @@ options:
           - the port on which the consul agent is running
         required: false
         default: 8500
-    scheme:
-        description:
-          - the protocol scheme on which the consul agent is running
-        required: false
-        default: http
-        version_added: "2.1"
-    validate_certs:
-        description:
-          - whether to verify the tls certificate of the consul agent
-        required: false
-        default: True
-        version_added: "2.1"
 """
 
 EXAMPLES = '''
@@ -312,8 +300,6 @@ def get_consul_api(module, token=None):
         token = module.params.get('token')
     return consul.Consul(host=module.params.get('host'),
                          port=module.params.get('port'),
-                         scheme=module.params.get('scheme'),
-                         validate_certs=module.params.get('validate_certs'),
                          token=token)
 
 def test_dependencies(module):
@@ -327,15 +313,13 @@ def test_dependencies(module):
 
 def main():
     argument_spec = dict(
-        mgmt_token=dict(required=True, no_log=True),
+        mgmt_token=dict(required=True),
         host=dict(default='localhost'),
-        scheme=dict(required=False, default='http'),
-        validate_certs=dict(required=False, default=True),
         name=dict(required=False),
         port=dict(default=8500, type='int'),
         rules=dict(default=None, required=False, type='list'),
         state=dict(default='present', choices=['present', 'absent']),
-        token=dict(required=False, no_log=True),
+        token=dict(required=False),
         token_type=dict(
             required=False, choices=['client', 'management'], default='client')
     )
